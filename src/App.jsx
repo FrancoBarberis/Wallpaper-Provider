@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import Slider from "./components/Slider";
 import Search from "./components/Search";
-import { useContext } from "react";
+import Layout from "./components/Layout";
 
 function App() {
   const [fetchedImages, setFetchedImages] = useState([]);
@@ -10,7 +9,7 @@ function App() {
   };
   useEffect(() => {
     fetch(
-      "https://api.pexels.com/v1/search?page=1&query=nature&mountain=portrait&size=large",
+      "https://api.pexels.com/v1/search?page=1&query=cat=landscape&size=large",
       {
         headers,
       }
@@ -27,9 +26,8 @@ function App() {
 
 
   return (
-    <div className="relative flex flex-col bg-black w-screen min-h-screen text-white">
-      <Search />
-      <Slider images={fetchedImages} />
+    <div className="relative flex flex-col bg-black w-screen min-h-screen">
+      <Layout images={fetchedImages} />
     </div>
   );
 }

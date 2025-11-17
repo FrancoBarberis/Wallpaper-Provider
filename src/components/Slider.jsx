@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Card from "./Card";
 
-export default function Slider({ images }) {
+export default function Slider({ images, onImageClick }) {
   const visibleSlides = 4;
   const [start, setStart] = useState(0);
   const end = start + visibleSlides;
@@ -23,34 +23,45 @@ export default function Slider({ images }) {
     }
   };
 
+  const handleImageClick = (img, index) => {
+    setCurrentIndex(index + 1);
+    onImageClick(img);
+  };
+
   return (
-    <div className="slider absolute bottom-4 right-30 bg-transparent p-3 rounded shadow-md w-fit">
+    <div className="slider absolute bottom-5 right-15 bg-transparent">
       {/* Imágenes visibles */}
-      <div className="carousel flex flex-row gap-2 transition-all duration-300 ease-in-out mb-3">
-        {images.slice(start, end).map((img) => (
-          <Card key={img.id} image={img} />
+      <div className="carousel flex flex-row gap-3 transition-all duration-300 ease-in-out mb-3 w-max">
+        {images.slice(start, end).map((img, idx) => (
+          <div
+            key={img.id}
+            onClick={() => handleImageClick(img, start + idx)}
+            className="cursor-pointer"
+          >
+            <Card image={img} />
+          </div>
         ))}
       </div>
       {/* Botones e índice*/}
-      <div className="carousel-info flex flex-row align-center justify-between w-full">
-        <div className="prev-next-buttons flex gap-5">
+      <div className="carousel-info flex flex-row align-center justify-between">
+        <div className="prev-next-buttons flex gap-5 ml-5">
           <button
             onClick={goPrev}
             disabled={!canPrev}
-            className="px-2 py-2 cursor-pointer border rounded-full disabled:opacity-50"
+            className="prev-button cursor-pointer border rounded-full disabled:opacity-50 px-3 py-1"
           >
             ◀
           </button>
           <button
             onClick={goNext}
             disabled={!canNext}
-            className="px-2 py-2 cursor-pointer border rounded-full disabled:opacity-50"
+            className="next-button cursor-pointer border rounded-full disabled:opacity-50 px-3 py-1"
           >
             ▶
           </button>
         </div>
-        <div className="index-display font-bold flex place-items-center mr-5">
-          {currentIndex}
+        <div className="index-display font-bold flex place-items-center mr-5 text-white">
+          {currentIndex} /15
         </div>
       </div>
     </div>
