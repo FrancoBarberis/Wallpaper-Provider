@@ -58,16 +58,22 @@ export default function Slider({ images, onImageClick }) {
           <button
             onClick={goPrev}
             disabled={!canPrev}
-            className="prev-button cursor-pointer border rounded-full disabled:opacity-50 px-3 py-1"
+            className="prev-button cursor-pointer border-2 border-white rounded-full disabled:opacity-30 w-10 h-10 flex items-center justify-center hover:bg-white hover:bg-opacity-10 transition-all"
           >
-            ◀
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="10" y1="3" x2="6" y2="8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="6" y1="8" x2="10" y2="13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </button>
           <button
             onClick={goNext}
             disabled={!canNext}
-            className="next-button cursor-pointer border rounded-full disabled:opacity-50 px-3 py-1"
+            className="next-button cursor-pointer border-2 border-white rounded-full disabled:opacity-30 w-10 h-10 flex items-center justify-center hover:bg-white hover:bg-opacity-10 transition-all"
           >
-            ▶
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="6" y1="3" x2="10" y2="8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="10" y1="8" x2="6" y2="13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </button>
         </div>
         <div className="index-display font-bold flex place-items-center mr-5 text-white">

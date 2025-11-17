@@ -15,16 +15,6 @@ export default function Layout({ images }) {
     }
   }, [initialImage]);
 
-  const formatPhotographerName = (name) => {
-    if (!name) return "";
-    return name
-      .toLowerCase()
-      .split(" ")
-      .map(
-        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-      )
-      .join(" ");
-  };
 
   return (
     <div className="layout relative w-full h-screen overflow-hidden">
@@ -77,7 +67,7 @@ export default function Layout({ images }) {
                 textShadow: '2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 0, 0, 0.6)'
               }}
             >
-              PHOTO BY: {formatPhotographerName(selectedImage?.photographer)}
+              PHOTO BY: {selectedImage?.photographer}
             </motion.p>
 
             {selectedImage?.location && (
