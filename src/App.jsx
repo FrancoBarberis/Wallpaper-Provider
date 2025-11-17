@@ -9,7 +9,7 @@ function App() {
   };
   useEffect(() => {
     fetch(
-      "https://api.pexels.com/v1/search?page=1&query=cat=landscape&size=large",
+      "https://api.pexels.com/v1/search?query=dog&per_page=15&orientation=landscape",
       {
         headers,
       }
