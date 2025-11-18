@@ -57,12 +57,12 @@ export default function Layout({ images, onSearch, currentPage, hasNextPage, onN
       </div>
       
       {/* Download button - always visible */}
-      <div className="absolute top-4 sm:top-8 left-2 sm:left-4 lg:left-8 z-40">
+      <div className="download absolute top-4 sm:top-8 left-2 sm:left-4 lg:left-8 z-40">
         <DownloadButton selectedImage={selectedImage} onModalOpenChange={setIsModalOpen} />
       </div>
 
       {/* Hide/Show UI button - separated from download */}
-      <div className="absolute top-4 sm:top-8 left-12 sm:left-16 lg:left-20 z-40">
+      <div className="hide-show absolute top-4 sm:top-8 sm:left-16 lg:left-20 z-40">
         <HideUIButton isHidden={isUIHidden} onToggle={() => setIsUIHidden(!isUIHidden)} />
       </div>
 
