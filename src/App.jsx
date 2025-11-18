@@ -33,7 +33,6 @@ function App() {
           }));
           setFetchedImages(formattedImages);
           setHasNextPage(data.total_results > (currentPage * 15));
-          console.log(formattedImages);
         } else {
           console.error("Invalid API response:", data);
         }
