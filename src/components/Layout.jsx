@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Slider from "./Slider";
 import Search from "./Search";
+import DownloadButton from "./DownloadButton";
 
 export default function Layout({ images, onSearch, currentPage, hasNextPage, onNextPage, onPrevPage }) {
   const initialImage = useMemo(
@@ -34,6 +35,11 @@ export default function Layout({ images, onSearch, currentPage, hasNextPage, onN
 
   return (
     <div className="layout relative w-full h-screen overflow-hidden select-none">
+      {/* Download button */}
+      <div className="absolute top-8 left-8 z-20">
+        <DownloadButton selectedImage={selectedImage} />
+      </div>
+
       {/* Search bar */}
       <div className="absolute top-8 right-8 z-20">
         <Search onSearch={onSearch} />
