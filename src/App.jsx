@@ -8,9 +8,11 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
   
+
+  //FETCH A RUTA RELATIVA PARA EVITAR CONFLICTO DE HTTP VS HTTPS
   useEffect(() => {
     fetch(
-      `http://api/wallpaper?search=${searchQuery}&per_page=15&page=${currentPage}`
+      `/api/wallpaper?search=${searchQuery}&per_page=15&page=${currentPage}`
     )
       .then((res) => res.json())
       .then((data) => {
