@@ -20,11 +20,14 @@ export default function Slider({ images, onImageClick, onProgressChange, isPause
     setCurrentImageIndex(0);
     setProgress(0);
     progressRef.current = 0;
-    // Seleccionar la primera imagen al cargar
-    if (images && images.length > 0) {
-      onImageClick(images[0]);
-    }
+    // Ya no llamamos a onImageClick aquí
   }, [images]);
+    // Llamar a onImageClick solo cuando cambia el índice actual
+    useEffect(() => {
+      if (images && images.length > 0 && typeof onImageClick === 'function') {
+        onImageClick(images[currentImageIndex]);
+      }
+    }, [currentImageIndex, images, onImageClick]);
   
   // Sincronizar progressRef cuando cambia isPaused
   useEffect(() => {
