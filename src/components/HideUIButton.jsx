@@ -2,7 +2,7 @@ export default function HideUIButton({ isHidden, onToggle }) {
     return (
         <button
             onClick={onToggle}
-            className="bg-black bg-opacity-30 backdrop-blur-md text-white p-3 rounded-full hover:bg-opacity-40 transition-all cursor-pointer focus:outline-none"
+            className="hide-ui bg-black bg-opacity-30 backdrop-blur-md text-white p-3 rounded-full hover:bg-opacity-40 transition-all cursor-pointer focus:outline-none"
             title={isHidden ? "Show interface" : "Hide interface"}
         >
             {isHidden ? (

@@ -71,7 +71,7 @@ export default function DownloadButton({ selectedImage, onModalOpenChange }) {
                     setShowModal(true);
                     setLoadingStates({ portrait: true, landscape: true, square: true });
                 }}
-                className="bg-black bg-opacity-30 backdrop-blur-md text-white p-3 rounded-full hover:bg-opacity-40 transition-all cursor-pointer focus:outline-none"
+                className="download bg-black bg-opacity-30 backdrop-blur-md text-white p-3 rounded-full hover:bg-opacity-40 transition-all cursor-pointer focus:outline-none"
                 title="Download image"
             >
                 <svg 
