@@ -25,25 +25,29 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API_KEY no configurada' });
   }
 
-  // 5) URL correcta (usar & en lugar de &amp;)
-  const upstream = `https://api.pexels.com/v1/search?query=${encodeURIComponent(rawSearch)}&per_page=${safePerPage}&page=${safePage}`;
+  // 5) Construcción de URL con URLSearchParams (sin &amp;)
+  const params = new URLSearchParams({
+    query: rawSearch,
+    per_page: String(safePerPage),
+    page: String(safePage),
+  });
+  const upstream = `https://api.pexels.com/v1/search?${params.toString()}`;
 
   // 6) Timeout
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10_000);
 
   try {
-
     console.log('Calling:', upstream);
     console.log('API_KEY length:', API_KEY?.length);
 
     const r = await fetch(upstream, {
       headers: {
-        'Accept': 'application/json',
-        'Authorization': API_KEY, // sin "Bearer"
+        Accept: 'application/json',
+        Authorization: API_KEY, // Pexels NO usa "Bearer", correcto como lo tenías
       },
       signal: controller.signal,
-      // cache: 'no-store' // descomenta si querés evitar cache local
+      // cache: 'no-store'
     });
 
     clearTimeout(timeout);
@@ -53,9 +57,9 @@ export default async function handler(req, res) {
       const text = await r.text().catch(() => '');
       const msg =
         r.status === 401 ? 'API key inválida o revocada.'
-          : r.status === 403 ? 'Acceso denegado por Pexels.'
-            : r.status === 429 ? 'Límite de peticiones alcanzado. Intenta más tarde.'
-              : text || `Pexels API error: ${r.status}`;
+        : r.status === 403 ? 'Acceso denegado por Pexels.'
+        : r.status === 429 ? 'Límite de peticiones alcanzado. Intenta más tarde.'
+        : text || `Pexels API error: ${r.status}`;
       return res.status(r.status).json({ error: msg });
     }
 

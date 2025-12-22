@@ -8,25 +8,32 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("famous landmarks"); // mejor sin '+'
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const PAGE_SIZE = 15;
 
   useEffect(() => {
-    // Normaliza la query y arma la URL con & (no &amp;)
-    const q = encodeURIComponent(searchQuery);
-    const url = `/api/wallpaper?search=${q}&per_page=15&page=${currentPage}`;
+    // Construcción segura de la query (evita '&amp;')
+    const params = new URLSearchParams({
+      search: searchQuery,           // URLSearchParams se encarga del encoding
+      per_page: String(PAGE_SIZE),
+      page: String(currentPage),
+    });
 
+    const url = `/api/wallpaper?${params.toString()}`;
+
+    // Control de cancelación para evitar setState tras un re-render
     let cancelled = false;
 
     (async () => {
       try {
         const res = await fetch(url);
 
-        // 1) Validar status HTTP
+        // Validación de status HTTP
         if (!res.ok) {
           const text = await res.text().catch(() => "");
           throw new Error(`HTTP ${res.status} - ${text || "Request failed"}`);
         }
 
-        // 2) Validar Content-Type
+        // Validación de Content-Type
         const ct = res.headers.get("content-type") ?? "";
         if (!ct.includes("application/json")) {
           const text = await res.text().catch(() => "");
@@ -34,11 +41,11 @@ function App() {
           throw new Error("La API no devolvió JSON");
         }
 
-        // 3) Parsear JSON
+        // Parseo
         const data = await res.json();
         if (cancelled) return;
 
-        // 4) Validar estructura esperada
+        // Estructura esperada de Pexels: data.photos (array)
         if (data.photos && Array.isArray(data.photos)) {
           const formattedImages = data.photos.map((photo) => ({
             id: photo.id,
@@ -49,16 +56,18 @@ function App() {
             },
             alt: photo.alt || "Famous landmark",
             photographer: photo.photographer,
+            // Pexels a veces pone "City, Country" en alt; tomo solo antes de la coma
             location: photo.alt?.split(",")[0] || "Famous Place",
           }));
+
           setFetchedImages(formattedImages);
 
-          // Pexels suele devolver total_results y next_page
-          const pageSize = 15;
+          // Calcular si hay siguiente página
           const nextPageExists =
             (typeof data.total_results === "number" &&
-              currentPage * pageSize < data.total_results) ||
+              currentPage * PAGE_SIZE < data.total_results) ||
             Boolean(data.next_page);
+
           setHasNextPage(nextPageExists);
         } else {
           console.error("Invalid API response:", data);
@@ -66,22 +75,24 @@ function App() {
           setHasNextPage(false);
         }
       } catch (error) {
+        // Importante: mostrar el error que devuelve la serverless para debug
         console.error("Error:", error);
         setFetchedImages([]);
         setHasNextPage(false);
       }
     })();
 
-    // cleanup por si el efecto se re-ejecuta
+    // Cleanup del efecto
     return () => {
       cancelled = true;
     };
   }, [searchQuery, currentPage]);
 
+  // Handlers de búsqueda y paginación
   const handleSearch = (query) => {
-    // Podés seguir usando '+' si querés, pero encodeURIComponent ya se encarga
+    // encodeURIComponent no es necesario; URLSearchParams lo hace
     setSearchQuery(String(query).trim());
-    setCurrentPage(1);
+    setCurrentPage(1); // reset paginación al buscar
   };
 
   const handleNextPage = () => {
