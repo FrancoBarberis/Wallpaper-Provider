@@ -5,35 +5,38 @@ import Layout from "./components/Layout";
 
 function App() {
   const [fetchedImages, setFetchedImages] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("famous landmarks"); // mejor sin '+'
+  const [searchQuery, setSearchQuery] = useState("famous landmarks");
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const PAGE_SIZE = 15;
 
   useEffect(() => {
-    // Construcción segura de la query (evita '&amp;')
-    const params = new URLSearchParams({
-      search: searchQuery,           // URLSearchParams se encarga del encoding
-      per_page: String(PAGE_SIZE),
-      page: String(currentPage),
-    });
+    // ✅ Construcción de URL robusta (sin &amp;)
+    const u = new URL("/api/wallpaper", window.location.origin);
+    u.searchParams.set("search", searchQuery);
+    u.searchParams.set("per_page", String(PAGE_SIZE));
+    u.searchParams.set("page", String(currentPage));
 
-    const url = `/api/wallpaper?${params.toString()}`;
+    // Debug: VER la URL exacta que se va a pedir
+    console.log("[client] Request URL:", u.toString()); // debe mostrar ...&per_page=...&page=... (SIN &amp;)
 
-    // Control de cancelación para evitar setState tras un re-render
     let cancelled = false;
 
     (async () => {
       try {
-        const res = await fetch(url);
+        setLoading(true);
+        setErrorMsg("");
 
-        // Validación de status HTTP
+        const res = await fetch(u.toString());
+
         if (!res.ok) {
           const text = await res.text().catch(() => "");
           throw new Error(`HTTP ${res.status} - ${text || "Request failed"}`);
         }
 
-        // Validación de Content-Type
         const ct = res.headers.get("content-type") ?? "";
         if (!ct.includes("application/json")) {
           const text = await res.text().catch(() => "");
@@ -41,11 +44,9 @@ function App() {
           throw new Error("La API no devolvió JSON");
         }
 
-        // Parseo
         const data = await res.json();
         if (cancelled) return;
 
-        // Estructura esperada de Pexels: data.photos (array)
         if (data.photos && Array.isArray(data.photos)) {
           const formattedImages = data.photos.map((photo) => ({
             id: photo.id,
@@ -56,43 +57,38 @@ function App() {
             },
             alt: photo.alt || "Famous landmark",
             photographer: photo.photographer,
-            // Pexels a veces pone "City, Country" en alt; tomo solo antes de la coma
             location: photo.alt?.split(",")[0] || "Famous Place",
           }));
-
           setFetchedImages(formattedImages);
 
-          // Calcular si hay siguiente página
           const nextPageExists =
             (typeof data.total_results === "number" &&
               currentPage * PAGE_SIZE < data.total_results) ||
             Boolean(data.next_page);
-
           setHasNextPage(nextPageExists);
         } else {
           console.error("Invalid API response:", data);
           setFetchedImages([]);
           setHasNextPage(false);
         }
-      } catch (error) {
-        // Importante: mostrar el error que devuelve la serverless para debug
-        console.error("Error:", error);
+      } catch (err) {
+        console.error("Error en fetch:", err);
+        setErrorMsg(String(err?.message || err));
         setFetchedImages([]);
         setHasNextPage(false);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
 
-    // Cleanup del efecto
     return () => {
       cancelled = true;
     };
   }, [searchQuery, currentPage]);
 
-  // Handlers de búsqueda y paginación
   const handleSearch = (query) => {
-    // encodeURIComponent no es necesario; URLSearchParams lo hace
     setSearchQuery(String(query).trim());
-    setCurrentPage(1); // reset paginación al buscar
+    setCurrentPage(1);
   };
 
   const handleNextPage = () => {
@@ -104,7 +100,10 @@ function App() {
   };
 
   return (
-    <div className="relative flex flex-col bg-black w-screen min-h-screen">
+    <div className="relative flex flex-col bg-black w-screen min-h-screen text-white">
+      {loading && <div className="p-4">Cargando wallpapers…</div>}
+      {errorMsg && <div className="p-4 text-red-400">Error: {errorMsg}</div>}
+
       <Layout
         images={fetchedImages}
         onSearch={handleSearch}
