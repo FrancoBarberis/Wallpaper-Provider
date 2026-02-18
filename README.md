@@ -9,7 +9,7 @@ Este proyecto se basa en la estructura original del template React + Vite, visib
 
 - **Catálogo de wallpapers** con imágenes almacenadas en `public/assets/`.  
 - **API Serverless** dentro de la carpeta `api/` (compatible con Vercel).  
-- **Interfaz rápida** construida con **React + Vite**, que provee recarga en caliente (HMR) y build optimizado. [1](https://github.com/FrancoBarberis/Wallpaper-Provider)  
+- **Interfaz rápida** construida con **React + Vite**, que provee recarga en caliente (HMR) y build optimizado. 
 - **Tailwind CSS** para estilos utilitarios simples y escalables (configurado en `tailwind.config.js`). [1](https://github.com/FrancoBarberis/Wallpaper-Provider)  
 - **ESLint** incluido para mantener calidad de código. [1](https://github.com/FrancoBarberis/Wallpaper-Provider)  
 - **Despliegue fácil en Vercel**, plataforma optimizada para este tipo de proyectos. [2](https://vercel.com/)
@@ -26,10 +26,10 @@ Si está desplegado, el proyecto se encuentra disponible en:
 
 ## 🧱 Stack Técnico
 
-- **React + Vite** (configuración y archivos base proporcionados por el template). [1](https://github.com/FrancoBarberis/Wallpaper-Provider)  
+- **React + Vite** (configuración y archivos base proporcionados por el template).  
 - **Tailwind CSS**  
 - **ESLint**  
-- **Vercel** (deploy + serverless). [2](https://vercel.com/)
+- **Vercel** (deploy + serverless). 
 
 ---
 
