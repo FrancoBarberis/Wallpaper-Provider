@@ -101,7 +101,6 @@ function App() {
 
   return (
     <div className="relative flex flex-col bg-black w-screen min-h-screen text-white">
-      {loading && <div className="p-4">Cargando wallpapers…</div>}
       {errorMsg && <div className="p-4 text-red-400">Error: {errorMsg}</div>}
 
       <Layout
