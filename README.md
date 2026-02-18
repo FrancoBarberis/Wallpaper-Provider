@@ -1,4 +1,4 @@
-# Wallpaper Provider
+# FrameScapes
 
 Un proveedor de wallpapers listo para usar: **frontend en React + Vite** con **Tailwind CSS**, endpoints serverless en `api/` para exponer catálogos de imágenes y despliegue en **Vercel**.  
 Este proyecto se basa en la estructura original del template React + Vite, visible en el repositorio. [1](https://github.com/FrancoBarberis/Wallpaper-Provider)
